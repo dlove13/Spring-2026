@@ -1,40 +1,27 @@
 #include <stdio.h>
 
-int main() {
-
     //initialize variables
     char operand;
-    int integer1;
-    int integer2;
+    int a;
+    int b;
+    int result;
 
-    //Prompt user for input
-    printf("Enter operation (+, - , *, /, s, or c)");
-    scanf("%c", &operand);
+    //Declare Functions
+    void userInput();
 
-    switch (operand) {
-        case '+':
+    //Define Functions
+    void userInput() {
+        printf("Choose operand (+, - , *, /, s, c):  ");
+        scanf("%c", operand);
 
-            break;
-
-        case '-':
-            
-            break;
-        case '*':
-
-            break;
-        
-        case '/':
-
-            break;
-
-        case 's':
-            
-            break;
-
-        case 'c':
-
-            break;
+        printf("%c", operand); //test
     }
+
+
+
+int main() {
+
+        userInput();
 
     return 0;
 }
