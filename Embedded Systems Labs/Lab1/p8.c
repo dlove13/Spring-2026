@@ -15,13 +15,13 @@ int main() {
     //note that shifts are in powers of 2
     // (1 << bit) 0b0010
 
-    if ((( 1 << bit ) & number) == 0 )
-    {
+    if ((( 1 << bit ) & number) == 0 ) //mask is shifted over however many bits requested
+    {                                   //then the two binary numbers are compared against each other
         printf("FALSE \n");
     }
     else
     {
-        printf("TRUE \n");
+        printf("TRUE \n");              //true if the bit is set in the requested position
     }
 
     return 0;
