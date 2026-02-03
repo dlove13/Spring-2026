@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "wiring_private.h": "c",
+        "pins_arduino.h": "c",
+        "pgmspace.h": "c",
+        "eecs_388_lib.h": "c"
+    }
+}
