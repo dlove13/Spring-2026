@@ -1,0 +1,105 @@
+<!--Author: Davina Love
+    Date: 02-05-2026
+    EECS 468
+    AI Disclaimer: Google Gemini AI was utilized in the development of this program,
+    specifically in the "Fizz Buzz" section to determine the case order.
+
+    Class materials were utilized as well as reference.
+    -->
+
+    <!--The main structure of the web page is as follows: the excercise is titled with a <tag>,
+        the individual paragraphs are labeled with <id> that will be modified by a script that 
+        adds a string with the .innerHTML property after all the functions and loops have been ran. -->
+
+<!DOCTYPE html>
+<html>
+    <title>Assignment 2</title>
+    <header> Assignment 2</header>
+    <body>
+        <tag>Looping a triangle</tag>
+        <pre id="2.1"></pre>  
+    <script>
+        var triangle = "";       
+
+        for (let i = 1; i <= 10; i++) {             //Nested for loop where i iterates the height of the
+                                                    //triangle 
+            for (let j = 1; j <= i; j++) {          //j increments with every i, creating the triangle hypotenuse
+                triangle += "x";
+            }
+
+            triangle += "<br>";                     //add a space between rows
+        }
+
+        document.getElementById("2.1").innerHTML = triangle; 
+    </script>
+
+        <tag>Fizz Buzz</tag>
+        <pre id="2.2"></pre>
+        <script>
+            function FizzBuzz(num) {                        //Takes an input and checks if the number is divisible by 7,4 or both
+                if ((num % 7 == 0) && (num % 4 == 0)) {     //Both case is checked first, otherwise it would be skipped
+                    return "Divisible by both 7 and 4";
+                }
+                else if (num % 4 == 0) {
+                    return "Divisible by 4";
+                }
+
+                else if ((num % 7 == 0) && !(num % 4 == 0)) {
+                    return "Divisible by 7";
+                }
+
+                else {
+                    return num;                             //If neither divisible by 7 or 4, the number is directly outputted
+                }
+            }
+
+            let output = "";
+
+            for (let i = 1; i <= 100; i++) {                //Iterate over numbers 1-100
+                output += FizzBuzz(i) + "<br>";             //Output result on a new line
+            }
+
+            document.getElementById("2.2").innerHTML = output;
+        </script>
+
+        <tag>n-by-n Grid</tag>
+        <pre id="2.3"></pre>
+
+        <script>
+            var size;                                           //Declare variable n for grid size
+            function Grid(size) {
+                let grid = "";                                  //declare grid as a local variable
+                for (let i = 0; i <= size; i++) {               //Nested for loop that includes if checks
+                    if (i % 2 == 0) {                           //Starting the first row, every other row alternates
+                        for (let j = 0; j <=size; j++) {        //with a space and *
+                            if (j % 2 == 0) {
+                                grid += "&nbsp";
+                            }
+                            else if (j % 2 == 1) {
+                                grid += "*";
+                            }
+                        }
+                    }
+                    if (i % 2 == 1) {                           //Starting with the second row, every other row alternates
+                        for (let j = 0; j <=size; j++) {        //with a * and space
+                            if (j % 2 == 0) {
+                                grid += "*";
+                            }
+                            else if (j % 2 == 1) {
+                                grid += "&nbsp";
+                            }
+                        }
+                }
+                    grid += "<br>";                             //creates a gap between rows
+                }
+
+                return grid;                                   //return grid as a string
+            }
+
+            var grid_8 = Grid(8);                               //test with n=8
+            var grid_14 = Grid(14);                             //test with n=14
+
+            document.getElementById("2.3").innerHTML = grid_8 + "<br>" + grid_14;
+        </script>
+    </body>
+</html>
