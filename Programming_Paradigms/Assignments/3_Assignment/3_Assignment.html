@@ -1,0 +1,94 @@
+<html>
+    <title>Assignment 3</title>
+    <head>Assignment 3</head>
+    <body>
+        <p>
+
+        </p>
+    </body>
+
+<script>
+    class Group {
+        constructor() {
+            this.group = [];
+            var size = 0;
+        }
+
+        add(value) {
+            if (!this.has(value)) {
+                this.group.push(value); 
+            }
+            else {
+                return 1;
+            }
+        }
+
+        delete(value) {
+            if (this.has(value)) {
+                let index = this.group.indexOf(value);
+                this.group.splice(index, 1);
+            }
+        }
+
+        has(value) {
+            return this.group.includes(value);
+        }
+
+
+        union(argument) {
+            const unionGroup = new Group;
+            
+            for (let i = 0; i < this.group.length; i++) {
+                unionGroup.add(this.group[i]);
+            }
+
+            for (let j = 0; j < argument.group.length; j++) {
+                unionGroup.add(argument.group[j]);
+            }
+
+            return unionGroup.group;
+        }
+
+        intersection(argument) {}
+
+        difference(argument) {}
+    }
+     //Test Cases
+
+     //Create two groups
+     let group1 = new Group();
+     let group2 = new Group();
+
+     group1.add(1);  //1, 2, 3
+     group1.add(2);
+     group1.add(3);
+
+     group2.add(2); //2,3,5
+     group2.add(3);
+     group2.add(5);
+     group2.add(2);
+
+     //Display groups' contents
+     console.log(group1.group);
+     console.log(group2.group); 
+    
+     console.log(group1.has(5));
+     console.log(group2.has(3));
+     console.log(group1.union(group2));
+     console.log(group1.intersection(group2));
+     console.log(group1.difference(group2));
+     console.log(group1.delete(1));
+     console.log(group2.delete(1));
+
+
+    
+    
+    
+
+
+        
+
+
+</script>
+
+</html>

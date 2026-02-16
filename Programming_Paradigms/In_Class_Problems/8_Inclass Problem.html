@@ -1,0 +1,18 @@
+<!DOCTYPE html>                                                             <!--Declare document type-->
+<html>                                                                      <!--Start html content-->
+  <head>                                                                    <!--Start head node-->
+    <meta charset="utf-8" />
+  </head>                                                                   <!--End head node-->
+  <body>                                                                    <!--Start body node-->
+    <p id="line1"></p>                                                      <!--Child node 1-->
+    <p id="line2"></p>                                                      <!--Child node 2-->
+    <button type="button" onclick="changeText()">Change Text</button>       <!--button that runs javaScript function when pressed-->
+    <script>                                                                //Start javaScript code
+      function changeText() {                                               //Declare function
+        var element = document.getElementsByTagName("p");                     //Declare element holding child node 1
+        element[0].innerHTML = "Hello!";                                    //Change html contents of child node 1 to "Hello"
+        element[1].innerHTML = "World!";                                    //Change html contents of child node 2 to "World!"                                
+      }                                                                     //End javaScript code
+    </script>                                                              
+  </body>                                                                 <!--End body node-->
+</html>                                                                    <!--End html-->
