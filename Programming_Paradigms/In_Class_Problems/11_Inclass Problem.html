@@ -1,0 +1,51 @@
+<html>
+    <body>
+        <canvas id="quadratic"></canvas>
+        <canvas id="bezier"></canvas>
+        <canvas id="smiley"></canvas>
+    </body>
+
+    <script>
+        //draw quadratic curve with control point of (60,10)
+
+        let cxq = document.getElementById("quadratic").getContext("2d");
+        cxq.beginPath();
+        cxq.moveTo(20,70)
+        cxq.quadraticCurveTo(60,10,70,80);
+        cxq.stroke();
+
+        //draw bezier from (20,90) to (60,90) with control points (20,10)
+        //and (100,10) and fill
+
+        let cxb = document.getElementById("bezier").getContext("2d");
+        cxb.beginPath();
+        cxb.moveTo(20,90);
+        cxb.bezierCurveTo(20,10,100,10,60,90);
+        cxb.lineTo(100,10);
+        cxb.lineTo(20,10);
+        cxb.closePath();
+        cxb.fill()
+        cxb.stroke();
+
+        //draw a smiley centered at (150,50) with a radius of 40px
+        //eye has radius of 10px
+        //left eye centered at (130,40) and right eye centered at (170,40)
+
+        let cxs = document.getElementById("smiley").getContext("2d");
+        cxs.beginPath();
+        //smile
+        cxs.arc(150,50,40,0, Math.PI);
+        cxs.stroke();
+        //eyes
+        cxs.beginPath();
+        cxs.arc(130,40,10,0,2 * Math.PI);
+        cxs.fill();
+        cxs.stroke();
+
+        cxs.beginPath();
+        cxs.arc(170,40,10,0,2 * Math.PI);
+        cxs.fill();
+        cxs.stroke();
+
+    </script>
+</html>

@@ -1,0 +1,17 @@
+<html>
+    <canvas></canvas>   <!--create a new canvas-->
+
+    <script>
+        let cx = document.querySelector("canvas").getContext("2d"); //selecting the canvas
+
+        cx.beginPath();     //start path
+        cx.moveTo(30,30);   //initial coordinates
+        cx.lineTo(80,30);   //top line
+        cx.lineTo(100,80);  //right diagonal
+        cx.lineTo(10,80);   //bottom line
+        cx.lineTo(30,30);   //left diagonal
+
+        cx.stroke();        //create lines
+
+    </script>
+</html>
