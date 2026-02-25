@@ -1,0 +1,20 @@
+<canvas width="600" height="300"></canvas>
+<script>
+  let cx = document.querySelector("canvas").getContext("2d");
+  function branch(length, angle, scale) {
+    cx.fillRect(0, 0, 1, length); //draw a line
+    if (length < 8) return;
+    cx.save();
+    cx.translate(0, length); //move coordinate system
+    cx.rotate(-angle); //rotate left
+    branch(length * scale, angle, scale);
+    cx.rotate(2 * angle); //rotate right
+    branch(length * scale, angle, scale);
+    cx.restore();
+  }
+  cx.translate(300, 0);
+  branch(60, 0.5, 0.8);
+</script>
+
+
+<!--10.6632-->
