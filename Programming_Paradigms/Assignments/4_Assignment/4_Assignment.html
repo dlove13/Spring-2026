@@ -1,0 +1,76 @@
+<!--Author: Davina Love
+    EECS 468 Assignment 4
+    
+    Program creates a tabbed interface that will show the subsequent
+    child elements of a node when a button is pressed.
+
+    The function asTabs takes a name of a node as input and then displays the contents of the 
+    node as output.
+
+    AI Disclaimer: Google Gemini was utilized.
+    
+    https://www.w3schools.com/howto/howto_js_tabs.asp was also used as reference.
+
+    In class slides were used as reference.
+    
+    Date: 02-19-2026-->
+
+
+
+<html>
+    <title> Love's Go KU! Page</title>
+
+    <p class="button">
+        <button class="links" onclick="asTabs('Rock')">Rock</button>
+        <button class="links" onclick="asTabs('Chalk')">Chalk</button>
+        <button class="links" onclick="asTabs('Jayhawk')">Jayhawk</button>
+        <button class="links" onclick="asTabs('Go KU!')">Go KU!</button>
+        
+    </p>
+
+    <tab-panel>
+        <div data-tabname="Rock">Rock...</div>
+        <div data-tabname="Chalk">Rock Chalk...</div>
+        <div data-tabname="Jayhawk">Rock Chalk Jayhawk...</div>
+        <div data-tabname="Go KU!">Rock Chalk Jayhawk - Go KU!</div>
+    </tab-panel>
+    <script>
+
+        function asTabs(node)
+        {
+            //Initialize the HTMLCollections
+            const tabs = document.getElementsByTagName("div");
+            const buttons = document.getElementsByTagName("button");
+
+            ///Disable tab content
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].style.display = "none";
+            }
+            
+            //Set Default button Colors
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].style.color = "blue";
+            }
+
+            //Find and display the active tab
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].dataset.tabname === node) {
+                    tabs[i].style.display = 'block';
+                    break;
+                }
+            }
+
+            //Highlight current button in red
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].textContent === node) {
+                    buttons[i].style.color = "red";
+                    break;
+                }
+            }
+        }
+        
+        //Default tab upon open webpage
+        asTabs('Rock');
+
+    </script>
+</html>
