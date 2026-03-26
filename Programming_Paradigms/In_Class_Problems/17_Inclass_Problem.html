@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+    <h1>Notes Website</h1>
+
+    <body>
+        Create a new note and press "Save" to save the note.
+        It will be opened the next time this page is opened.
+
+        <textarea id="note" rows="5" cols="50"></textarea>
+
+        <button type="button" onclick="saveNote()">Save</button>
+    
+
+    <script>
+      const text = document.getElementById("note");
+      const fileName = "note.txt";
+
+      async function loadNote() {
+        const response = await fetch(`http://localhost:8000/${fileName}`);
+        if (response.ok) {
+           const savedNote = await response.text();
+           document.getElementById("note").value = savedNote;
+        }
+      }
+
+      async function saveNote() {
+        const content = text.value;
+        await fetch (`http://localhost:8000/${fileName}`, {
+            method: "PUT",
+            body: content
+        });
+      }
+
+    loadNote();
+
+    </script>
+    </body>
+</html>

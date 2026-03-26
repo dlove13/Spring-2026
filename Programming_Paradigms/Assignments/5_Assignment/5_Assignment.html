@@ -12,90 +12,92 @@
                         like a template to draw a pie chart with whatever set of data.
 -->
 
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <h1 style="font-family: Arial">Data Set 1</h1>
+  <canvas id="set_1" width="400" height="400"></canvas>
 
-<h1 style="font-family:  Arial">Data Set 1</h1>
-<canvas id = 'set_1' width="400" height="400"></canvas>
+  <h1 style="font-family: Arial">Data Set 2</h1>
+  <canvas id="set_2" width="400" height="400"></canvas>
 
-<h1 style="font-family: Arial">Data Set 2</h1>
-<canvas id = 'set_2' width = "400" height = "400"></canvas>
-
-<script>
-
+  <script>
     //Set 1 of data
-    const set_1 = [{name: "Very Happy", count: 63, color: 'green'},
-                    {name: "Happy", count: 104, color: 'lightgreen'},
-                    {name: "Neutral", count: 87, color: 'lightblue'},
-                    {name: "Unhappy", count: 36, color: 'pink'},
-                    {name: "Very Unhappy", count: 26, color: 'red'},
-                    {name: "No Comment", count: 18, color: 'gray'}];
+    const set_1 = [
+      { name: "Very Happy", count: 63, color: "green" },
+      { name: "Happy", count: 104, color: "lightgreen" },
+      { name: "Neutral", count: 87, color: "lightblue" },
+      { name: "Unhappy", count: 36, color: "pink" },
+      { name: "Very Unhappy", count: 26, color: "red" },
+      { name: "No Comment", count: 18, color: "gray" },
+    ];
 
     //Set 2 of data
-    const set_2 = [{name: "Satisfied", count: 213, color: 'green'},
-                    {name: "Neutral", count: 927, color: 'lightblue'},
-                    {name: "Unsatisfied", count: 463, color: 'red'},
-                    {name: "No comment", count: 256, color: 'gray'}];
-
-   
+    const set_2 = [
+      { name: "Satisfied", count: 213, color: "green" },
+      { name: "Neutral", count: 927, color: "lightblue" },
+      { name: "Unsatisfied", count: 463, color: "red" },
+      { name: "No comment", count: 256, color: "gray" },
+    ];
 
     //Draws pie chart with set data and canvas id
     function drawPie(set, id) {
-        //Set Chart
-        let cx = document.getElementById(id).getContext("2d");          //Select canvas
-        let total = set.reduce((sum, {count}) => sum + count, 0);     //Total responses
+      //Set Chart
+      let cx = document.getElementById(id).getContext("2d"); //Select canvas
+      let total = set.reduce((sum, { count }) => sum + count, 0); //Total responses
 
-        // Start at the top
-        let currentAngle = -0.5 * Math.PI;
-        //Coordinates of center (200,200) radius = 100
-        let centerX = 100;
-        let centerY = 100;
-        let radius = 100;
+      // Start at the top
+      let currentAngle = -0.5 * Math.PI;
+      //Coordinates of center (200,200) radius = 100
+      let centerX = 100;
+      let centerY = 100;
+      let radius = 100;
 
-        //Draw out slices
-        for (let object of set) {
-        let sliceAngle = (object.count / total) * 2 * Math.PI;      //Calculate size of slice
+      //Draw out slices
+      for (let object of set) {
+        let sliceAngle = (object.count / total) * 2 * Math.PI; //Calculate size of slice
         cx.beginPath();
         // center=200,200, radius=100
         // from current angle, clockwise by slice's angle
         cx.moveTo(centerX, centerY);
-        cx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+        cx.arc(
+          centerX,
+          centerY,
+          radius,
+          currentAngle,
+          currentAngle + sliceAngle,
+        );
         cx.lineTo(centerX, centerY);
-        cx.fillStyle = object.color;                                    //Used Google Gemini to debug color slices here
+        cx.fillStyle = object.color; //Used Google Gemini to debug color slices here
         cx.fill();
         currentAngle += sliceAngle;
-        }
+      }
 
+      //Create a Legend for data set
+      //Google Gemini was used in implementing the legend boxes after running
+      //into several issues trying to get the labels next to the slices themselves
 
-        //Create a Legend for data set
-        //Google Gemini was used in implementing the legend boxes after running
-        //into several issues trying to get the labels next to the slices themselves
+      let x_coord = 250;
+      let y_coord = 50;
+      const boxSize = 15;
 
-        let x_coord = 250;
-        let y_coord = 50;
-        const boxSize = 15;
+      for (let object of set) {
+        //Colored Square
+        cx.fillStyle = object.color;
+        cx.fillRect(x_coord, y_coord, boxSize, boxSize);
 
-        for (let object of set) {
-            //Colored Square
-            cx. fillStyle = object.color;
-            cx.fillRect(x_coord, y_coord, boxSize, boxSize);
+        //Text Label
+        cx.fillStyle = "black";
+        cx.font = "12px Arial";
+        cx.textAlign = "left";
+        cx.textBaseline = "middle"; //Aligns text next to the color box
+        cx.fillText(object.name, x_coord + boxSize + 10, y_coord + boxSize / 2); //Added 10px as a buffer space for the text and box
 
-            //Text Label
-            cx.fillStyle = 'black';
-            cx.font = '12px Arial';
-            cx.textAlign = 'left';
-            cx.textBaseline = 'middle';     //Aligns text next to the color box
-            cx.fillText(object.name, x_coord + boxSize + 10, y_coord + (boxSize / 2)); //Added 10px as a buffer space for the text and box
-
-            //Move down
-            y_coord += 25;
-        }
+        //Move down
+        y_coord += 25;
+      }
     }
 
     drawPie(set_1, "set_1");
     drawPie(set_2, "set_2");
-
-</script>
-
+  </script>
 </html>
