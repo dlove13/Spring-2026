@@ -1,144 +1,146 @@
-  const {createServer} = require("http");
-        const methods = Object.create(null);
+/* 
+Author: Davina Love
+Date: 04-06-2026
 
-        createServer((request, response) => {
-            /*Bybass CORS*/
-            //Allow all domains
-            response.setHeader('Access-Control-Allow-Origin', '*');
-            //Allow HTTP methods
-            response.setHeader('Access-Control-Allow-Methods', '*');
-            //Allow headers
-            response.setHeader('Access-Control-Allow-Headers', '*');
-            //Handle preflight OPTIONS requests
-            if (request.method === 'OPTIONS') {
-                //End response for OPTIONS immediately
-                return response.end();
-            }
-            //end bypass
-            let handler = methods[request.method] || notAllowed;
-            handler(request)
-                .catch(error => {
-                    if (error.status != null) return error;
-                    return {body: String(error), status: 500};
-                })
+Desc: Creates a server that can create a directory, read, write and delete files.
 
-                .then(({body, status = 200, type = "text/plain"}) => {
-                    response.writeHead(status, {"Content-Type" : type});
-                    if (body && body.pipe) body.pipe(response);
-                    else response.end(body); 
-                });
-        }).listen(8000);
+AI Disclaimer: Google Gemini was used in this assignment. 
+*/
 
-        //Alert that the server is listening
-        console.log("Server is running!");
+//Gemini advised to consolidate all imports
+const { createServer } = require("http");
+const { parse } = require("url");
+const { resolve, sep } = require("path");
+const { createReadStream, createWriteStream, promises: fs } = require("fs");
+const mime = require("mime"); //Gemini advised to downgrade to mime ver 2 so require would be valid
 
-        //Define Errors
-        async function notAllowed(request) {
-            return {
-                status: 405,
-                body: `Method ${request.method} not allowed.`
-            };
-        }
+const baseDirectory = process.cwd();
+const methods = Object.create(null);
 
+createServer((request, response) => {
+  /*Bybass CORS*/
+  //Allow all domains
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  //Allow HTTP methods
+  response.setHeader("Access-Control-Allow-Methods", "*");
+  //Allow headers
+  response.setHeader("Access-Control-Allow-Headers", "*");
+  //Handle preflight OPTIONS requests
+  if (request.method === "OPTIONS") {
+    //End response for OPTIONS immediately
+    return response.end();
+  }
+  //end bypass
 
-        const {createReadStream, link} = require("fs");
-        const {stat, readdir} = require("fs").promises;
-        const mime = require("mime");
+  let handler = methods[request.method] || notAllowed;
+  handler(request)
+    .catch((error) => {
+      //throw error if the server failed to load
+      if (error.status != null) return error;
+      return { body: "Internal Server Error", status: 500 };
+    })
 
-        const {parse} = require("url");
-        const {resolve, sep} = require("path");
-        const baseDirectory = process.cwd();
+    .then(({ body, status = 200, type = "text/plain" }) => {
+      response.writeHead(status, { "Content-Type": type });
+      if (body && body.pipe) body.pipe(response);
+      else response.end(body);
+    });
+}).listen(8000);
 
-        function urlPath(url) {
-            let {pathname} = parse(url);
-            let path = 
-            resolve(decodeURIComponent(pathname).slice(1));
-            if (path != baseDirectory && !path.startsWith(baseDirectory + sep)) {
-                throw {status: 403, body: "Forbidden"};
-            }
-            return path;
-        }
-        
-        methods.GET = async function(request) {
-            let path = urlPath(request.url);
-            let stats;
+//Alert that the server is listening
+console.log("Server is running!");
 
-            try {
-                stats = await stat(path);
-            } catch (error) {
-                if (error.code != "ENOENT") throw error;
-                else return {status: 404, body: "File not found"};
-            }
-            if (stats.isDirectory()) {
-                return {body: (await readdir(path)).join("/n")};
-            } else {
-                return {body: createReadStream(path),
-                        type: mime.getType(path)
-                };
-            }
-        };
+//Define Errors
+async function notAllowed(request) {
+  return {
+    status: 405,
+    body: `Method ${request.method} not allowed.`,
+  };
+}
 
-        const {createWriteStream} = require("fs");
+//Parse the path URL
+function urlPath(url) {
+  let { pathname } = parse(url);
+  let path = resolve(decodeURIComponent(pathname).slice(1));
+  if (path != baseDirectory && !path.startsWith(baseDirectory + sep)) {
+    throw { status: 403, body: "Forbidden" };
+  }
+  return path;
+}
 
-        function pipeStream(from, to) {
-            return new Promise((resolve, reject) => {
-                from.on("error", reject);
-                to.on("error", reject);
-                to.on("finish", resolve);
-                from.pipe(to);
-            });
-        }
+//Define GET method
+methods.GET = async function (request) {
+  let path = urlPath(request.url);
+  let stats;
 
-        methods.PUT = async function(request) {
-            let path = urlPath(request.url);
-            await pipeStream(request, createWriteStream(path));
-            return {status: 204};
-        };
+  try {
+    stats = await fs.stat(path);
+  } catch (error) {
+    if (error.code != "ENOENT") throw error;
+    else return { status: 404, body: "File Not found" }; //throw if the file doesn't exist
+  }
+  if (stats.isDirectory()) {
+    return { body: (await fs.readdir(path)).join("/n") }; //list out all files in the folder
+  } else {
+    return { body: createReadStream(path), type: mime.getType(path) }; //read file contents
+  }
+};
 
-        const {rmdir, unlink} = require("fs").promises;
+function pipeStream(from, to) {
+  return new Promise((resolve, reject) => {
+    from.on("error", reject); //will reject if connection to the server is interrupted
+    to.on("error", reject);
+    to.on("finish", resolve); //method fulfilled
+    from.pipe(to);
+  });
+}
 
-        methods.DELETE = async function(request) {
-            //translate url into file name
-            let path = urlPath(request.url);
-            //invoke stat object stats
-            let stats;
-            //wait for stat to find the file
-            try {
-                stats = await stat(path);
-            //handle non-existent file name
-            } catch(error) {
-                if (error.code != "ENOENT") throw error;
-                else return {status: 204};
-            }
-            //if the file name is a directory, remove it
-            if (stats.isDirectory()) await rmdir(path);
-            //if the file name is not a directory, remove it
-            else await unlink(path);
-            //report that the file deletion was successful
-            return {status: 204};
-        };
+methods.PUT = async function (request) {
+  let path = urlPath(request.url);
+  await pipeStream(request, createWriteStream(path));
+  return { status: 204 };
+};
 
-        const {mkdir, link}= require("fs").promises;
+methods.DELETE = async function (request) {
+  //translate url into file name
+  let path = urlPath(request.url);
+  //invoke stat object stats
+  let stats;
+  //wait for stat to find the file
+  try {
+    stats = await fs.stat(path);
+    //handle non-existent file name
+  } catch (error) {
+    if (error.code != "ENOENT") throw error;
+    else return { status: 204 };
+  }
+  //if the file name is a directory, remove it
+  if (stats.isDirectory()) await fs.rmdir(path);
+  //if the file name is not a directory, remove it
+  else await fs.unlink(path);
+  //report that the file deletion was successful
+  return { status: 204 };
+};
 
-        methods.MKCOL = async function(request) {
-            let path = urlPath(request.url);
-            let stats;
+//Define making a new folder
+methods.MKCOL = async function (request) {
+  let path = urlPath(request.url); //convert url to path
+  let stats;
 
-            try {
-                stats = await stat(path);
-            } catch (error) {
-                if (error.code != "ENOENT") throw error;
-            
+  try {
+    stats = await fs.stat(path);
+  } catch (error) {
+    //if path doesn't exits, create directory
+    if (error.code == "ENOENT") {
+      await fs.mkdir(path);
+      return { status: 201 }; //successful in creating a new folder
+    } else {
+      throw error;
+    }
+  }
 
-            await mkdir(path);
-            return {status: 201};  //Using 201 Created status return to differentiate between 204
-                                    //when file already exists
-            }
-            
-            if (stats.isDirectory()) {
-                return {status:204};
-            } else {
-                return {status: 400, body: "Not a directory"}
-            }
-        };
-    
+  if (!stats.isDirectory()) {
+    return { status: 400, body: "Not a directory" }; //throw error if path exists but isn't a directory
+  }
+  return { status: 204 }; //Already a directory
+};
