@@ -63,7 +63,7 @@ function urlPath(url) {
   let { pathname } = parse(url);
   let path = resolve(decodeURIComponent(pathname).slice(1));
   if (path != baseDirectory && !path.startsWith(baseDirectory + sep)) {
-    throw { status: 403, body: "Forbidden" };
+    throw { status: 403, body: "Forbidden" };     //doesn't ever throw this error
   }
   return path;
 }
@@ -80,7 +80,7 @@ methods.GET = async function (request) {
     else return { status: 404, body: "File Not found" }; //throw if the file doesn't exist
   }
   if (stats.isDirectory()) {
-    return { body: (await fs.readdir(path)).join("/n") }; //list out all files in the folder
+    return { body: (await fs.readdir(path)).join("\n") }; //list out all files in the folder
   } else {
     return { body: createReadStream(path), type: mime.getType(path) }; //read file contents
   }
@@ -144,3 +144,38 @@ methods.MKCOL = async function (request) {
   }
   return { status: 204 }; //Already a directory
 };
+
+
+/*
+cURL commands to test if the server is working
+
+Server is Responding [PASSED]
+curl -i http://localhost:8000/
+
+Make Collection [PASSED]
+curl -v -X MKCOL http://localhost:8000/test_dir
+
+Test Already created directory message [PASSED]
+curl -v -X MKCOL http://localhost:8000/test_dir
+
+Test 405 Not Allowed  [PASSED]
+curl -v -X POST http://localhost:8000/test.txt
+
+Create new file "hello.txt" in new test_dir [PASSED]
+curl -v -X PUT -d "Hello world!" http://localhost:8000/test_dir/hello.txt
+
+Read from files from directory [PASSED]
+curl -v http://localhost:8000/test_dir
+
+Read file contents  [PASSED]
+curl -v http://localhost:8000/test_dir/hello.txt
+
+Delete file "hello.txt" [PASSED]
+curl -v -X DELETE http://localhost:8000/test_dir/hello.txt
+
+Delete folder test_dir [PASSED]
+curl -v -X DELETE http://localhost:8000/test_dir
+
+Test 403 Forbidden [FAILED]
+curl -v http://localhost:8000/.../secrets.txt
+*/
