@@ -93,6 +93,7 @@ while(1):
 		if count%4 == 0:
 			pass
 			#Your code here.
+			ser1.write(bytes(deg))
 
 		
         

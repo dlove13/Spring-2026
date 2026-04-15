@@ -20,43 +20,49 @@ void auto_brake(int devid)
     if distance <= 60 = FLASHING RED LED
     */
 
+    
     //Check if TF mini ready to read
     //TODO: Figure out device ID for TFMini Lidar
     uint16_t dist = 0;      //initialize distance to 0
 
-    if ('Y' == ser_read(devid) && 'Y' == ser_read(devid)) 
+    if (ser_isready(devid)) 
     {
         uint8_t DIST_L = ser_read(devid);
         uint8_t DIST_H = ser_read(devid);
 
         dist = DIST_H << 8 | DIST_L;      //puts together low 8-bits and high 8-bits of distance data
 
-        if (dist < 50) {
+        if (dist <= 60) {                   
+            //Flashing RED
             gpio_write(RED_LED, ON);
+            gpio_write(GREEN_LED, OFF);
+            gpio_write(BLUE_LED, OFF);
+            delay(5);
+            gpio_write(RED_LED, ON);
+            
         }
-        // if (dist > 200) {                   //GREEN
-        //     gpio_write(RED_LED, ON);
-        //     gpio_write(GREEN_LED, ON);
-        //     gpio_write(BLUE_LED, OFF);
-        // }
-        // else if (dist <= 200 && dist > 100) {   //YELLOW
-        //     gpio_write(RED_LED, ON);
-        //     gpio_write(GREEN_LED, ON);
-        //     gpio_write(BLUE_LED, OFF);
-        // }
-        // else if (dist <= 100 &&  dist > 60) {   //RED
-        //     gpio_write(RED_LED, ON);
-        //     gpio_write(GREEN_LED, OFF);
-        //     gpio_write(BLUE_LED, OFF);
-        // }
-        // // else {                              //TODO: Potentially trouble shoot flashing??
-        // //     gpio_write(RED_LED, ON);
-        // //     delay(5);
-        // //     gpio_write(RED_LED, OFF);
-        // // }
-    }
+        else if (dist > 60 && dist <= 100) {
+            //RED
+            gpio_write(RED_LED, ON);
+            gpio_write(GREEN_LED, OFF);
+            gpio_write(BLUE_LED, OFF);
+            
+        }
+        else if (dist > 100 && dist <= 200) {
+            //YELLOW
+            gpio_write(RED_LED, ON);
+            gpio_write(GREEN_LED, ON);
+            gpio_write(BLUE_LED, OFF);
+        }
+        else {
+            //GREEN
+            gpio_write(RED_LED, OFF);
+            gpio_write(GREEN_LED, ON);
+            gpio_write(BLUE_LED, OFF);
+        }
 
-    ser_printline("%x", dist);
+        ser_printline(devid, "s");          //print distance value onto serial monitor
+    }
 }
 
 int read_from_pi(int devid)
@@ -64,6 +70,8 @@ int read_from_pi(int devid)
     // Task-3: 
     // You code goes here (Use Lab 09-option1 for reference)
     // After performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi.
+
+    ser_readline(devid, 80, sscanf(__buf,'%f'));
 
 }
 
