@@ -1,0 +1,11 @@
+--Calculates sum of the first n integer squares
+sumsqs :: Int -> Int
+sumsqs n = sum [x^2 | x <- [1..n]]
+
+--Maps an integer n to all such triples with components [1...n]
+pyths :: Int -> [(Int, Int, Int)]
+pyths n = [(x,y,z) | x <- [1..n], y <- [1..n], z <- [1..n], x^2 + y^2 == z^2]
+
+--Intensities n >50 and <200 are kept. Kept intensities are doubled. Result <= 255
+enhance :: [Int] -> [Int]
+enhance ns = [x * 2 | xs <- ns]
