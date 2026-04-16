@@ -38,7 +38,7 @@ void auto_brake(int devid)
             gpio_write(GREEN_LED, OFF);
             gpio_write(BLUE_LED, OFF);
             delay(5);
-            gpio_write(RED_LED, ON);
+            gpio_write(RED_LED, OFF);
             
         }
         else if (dist > 60 && dist <= 100) {
@@ -71,7 +71,7 @@ int read_from_pi(int devid)
     // You code goes here (Use Lab 09-option1 for reference)
     // After performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi.
 
-    ser_readline(devid, 80, sscanf(__buf,'%f'));
+    ser_readline(devid, 80, sscanf(__buf,'%d'));
 
 }
 
@@ -80,6 +80,31 @@ void steering(int gpio, int pos)
     // Task-4: 
     // Your code goes here (Use Lab 05 for reference)
     // Check the project document to understand the task
+    
+    //Testing Servo Motor
+    // uint16_t pwm_on;
+    // switch (pos) {
+    //     case 0: 
+    //         pwm_on = 544;
+    //         gpio_write (gpio, ON);
+    //         delay_usec(pwm_on);
+
+    //         gpio_write(gpio, OFF);
+    //         delay(19);
+    //         delay_usec(456);
+    //         break;
+        
+    //     case 180:
+    //         pwm_on = 2400;
+    //         gpio_write(gpio, ON);
+    //         delay_usec(pwm_on);
+
+    //         gpio_write(gpio, ON);
+    //         delay(17);
+    //         delay_usec(600);
+    //         break;
+    // }
+
 }
 
 
@@ -105,8 +130,9 @@ int main()
 
     while (1) {
 
-        auto_brake(lidar_to_hifive); // measuring distance using lidar and braking
-        int angle = read_from_pi(pi_to_hifive); //getting turn direction from pi
+        //auto_brake(lidar_to_hifive); // measuring distance using lidar and braking
+        //int angle = read_from_pi(pi_to_hifive); //getting turn direction from pi
+        int angle = 0;
         printf("\nangle=%d", angle);
         int gpio = PIN_19; 
         for (int i = 0; i < 10; i++){

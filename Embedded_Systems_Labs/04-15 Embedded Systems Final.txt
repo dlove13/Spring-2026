@@ -1,0 +1,3 @@
+04-15 Embedded Systems Final:
+
+-Found out the reason why the serial monitor wasn't working was because the path was for a Linux machine and not Windows. Who knew.
