@@ -12,7 +12,7 @@ import math
 import numpy as np
 import serial
 
-ser1 = serial.Serial("/dev/ttyAMA1", 115200)
+ser2 = serial.Serial("/dev/ttyAMA2", 115200)
 
 # Radian <-> Degree conversion functions
 def deg2rad(deg):
@@ -93,7 +93,7 @@ while(1):
 		if count%4 == 0:
 			pass
 			#Your code here.
-			ser1.write(bytes(deg))
+			ser2.write(deg.encode('utf-8'))
 
 		
         
