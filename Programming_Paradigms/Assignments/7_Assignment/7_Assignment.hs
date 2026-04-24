@@ -2,6 +2,7 @@
 --Replicate: produces a list of identical elements a an int  number of times
 replicate' :: Int -> a -> [a]
 replicate' n x = [x | _ <- [1..n]]
+
 --Perfects: integer is perfect if it equals the sum of all its factors, excluding the number itself
 --Returns list of all perfect numbers up to given limit
 --x: generates numbers 1 to limit, m: generates factors of x from 1 to limit-1, then checks if the sum of those
@@ -32,6 +33,7 @@ factorial x = product [1..x]
 
 choose :: Int -> Int -> Int
 choose n k = factorial n `div` (factorial k * factorial (n - k))
+
 --Count number of ways to distribute (n) distiguishable objects into (k) distiguishable boxes with (m) objects per box
 dodb :: Int -> Int -> Int ->  Int
 dodb n k m

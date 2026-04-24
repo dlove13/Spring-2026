@@ -1,0 +1,18 @@
+04-23
+
+Black box Testing:
+	Equivalence partitioning: partition each input variable independently
+	Combine partitions to determine system behavior
+	Expected result depends on combination of classes
+
+	no view of code or data structure
+	
+	Establish confidence / Functional testing
+
+Whitebox Testing:
+	Structure of test objects / code is explored
+	Mostly to seek faults
+
+Regression Testing: after fixing and testing defect, check if fixes did not affect other parts of the codebase
+	-Run previous test cases to make sure those pass
+	

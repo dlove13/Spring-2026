@@ -1,0 +1,45 @@
+Program:
+
+public int countPostive (int[] x)
+{
+
+	//Effects: if x == null throw NullPointer Exception
+	//else return the number of positive elements in x
+	
+	int count = 0;
+	
+	for (int i = 0; i < x.length; i++)
+	{
+		if (x[i] >= 0)
+			{
+				count++;
+			}
+	}
+	
+	return count;
+}
+
+1) At the line (x[i] >= 0), if x == 0, then the program will increase the counter despite 0 not being a positive number.
+
+2) Test Case that does not execute the fault:
+	Input: x = []
+	Expected Output: NullPointerException
+	Actual Output: NullPointerException
+
+3) Test Case that executes the fault but doesn't result in an error state:
+	Input: x = [1, 2, 3]
+	Expected Output: 3
+	Actual Output: 3 
+
+4) Test Case that leads to an error state but does not cause a failure:
+	Input: x = [1, 0, NULL]
+	Expected Output: NullPointerException
+	Actual Output: NullPointerException
+		Note that the count == 2, which the expected value would be  count == 1 before the exception is thrown
+
+5) Test Case that results in a failure:
+	Input: x = [0, 0, 0]
+	Expected Output: 0
+	Actual Output: 3
+
+	
